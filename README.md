@@ -1,6 +1,6 @@
 # FED Announcement Sentiment Analysis
 
-A professional web application for analyzing the sentiment of Federal Reserve (FED) press releases and announcements. This application provides a user-friendly interface
+A web application for analyzing the sentiment of Federal Reserve (FED) press releases and announcements. This application provides a user-friendly interface
 to run three distinct sentiment analysis algorithms on any FED announcement URL.
 
 ## Features
