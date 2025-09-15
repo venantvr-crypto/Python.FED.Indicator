@@ -6,18 +6,18 @@ from textblob import TextBlob
 
 
 class TextBlobSentenceAnalyzer:
-    """Analyse le sentiment phrase par phrase avec TextBlob."""
+    """Analyze sentiment sentence by sentence with TextBlob."""
 
     def __init__(self, url: str):
-        """Initialise l'analyseur avec l'URL cible."""
+        """Initialize the analyzer with the target URL."""
         self.url = url
         self.text = None
         self.result = {}
 
     def _fetch_and_parse_text(self) -> str | None:
         """
-        Télécharge et extrait le texte d'un communiqué de manière robuste.
-        Retourne le texte ou un message d'erreur.
+        Download and extract text from a press release robustly.
+        Returns the text or an error message.
         """
         try:
             response = requests.get(self.url, timeout=10)
@@ -27,45 +27,45 @@ class TextBlobSentenceAnalyzer:
             content_div = soup.find('div', id='pressReleaseText') or soup.find('article')
 
             if content_div:
-                texte = ' '.join(p.get_text() for p in content_div.find_all('p'))
+                text = ' '.join(p.get_text() for p in content_div.find_all('p'))
             else:
-                texte = ' '.join(p.get_text() for p in soup.find_all('p'))
+                text = ' '.join(p.get_text() for p in soup.find_all('p'))
 
-            if not texte.strip():
-                return "Erreur : Impossible d'extraire un contenu textuel significatif."
+            if not text.strip():
+                return "Error: Unable to extract meaningful text content."
 
-            self.text = texte
-            return None  # Pas d'erreur
+            self.text = text
+            return None  # No error
         except requests.exceptions.RequestException as e:
-            return f"Erreur de réseau ou URL invalide : {e}"
+            return f"Network error or invalid URL: {e}"
 
     def analyze(self) -> dict:
         """
-        Orchestre le processus d'analyse et retourne un dictionnaire de résultats.
+        Orchestrates the analysis process and returns a dictionary of results.
         """
         error = self._fetch_and_parse_text()
         if error:
             return {"error": error}
 
         if not self.text:
-            return {"error": "Le texte extrait est vide."}
+            return {"error": "The extracted text is empty."}
 
-        phrases = sent_tokenize(self.text)
-        if not phrases:
-            return {"error": "Aucune phrase n'a pu être extraite du texte."}
+        sentences = sent_tokenize(self.text)
+        if not sentences:
+            return {"error": "No sentences could be extracted from the text."}
 
-        sentiment_total = sum(TextBlob(phrase).sentiment.polarity for phrase in phrases)
-        sentiment_moyen = sentiment_total / len(phrases)
+        total_sentiment = sum(TextBlob(sentence).sentiment.polarity for sentence in sentences)
+        average_sentiment = total_sentiment / len(sentences)
 
-        if sentiment_moyen > 0.05:
-            sentiment_label = "Positif"
-        elif sentiment_moyen < -0.05:
-            sentiment_label = "Négatif"
+        if average_sentiment > 0.05:
+            sentiment_label = "Positive"
+        elif average_sentiment < -0.05:
+            sentiment_label = "Negative"
         else:
-            sentiment_label = "Neutre"
+            sentiment_label = "Neutral"
 
         self.result = {
             "sentiment": sentiment_label,
-            "average_polarity": sentiment_moyen
+            "average_polarity": average_sentiment
         }
         return self.result

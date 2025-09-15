@@ -1,84 +1,83 @@
-# Analyse de Sentiment des Annonces de la FED
+# FED Announcement Sentiment Analysis
 
-Une application web professionnelle pour analyser le sentiment des communiqués de presse et des annonces de la Réserve Fédérale (FED). Cette application offre une
-interface conviviale pour exécuter trois algorithmes d'analyse de sentiment distincts sur n'importe quelle URL d'annonce de la FED.
+A professional web application for analyzing the sentiment of Federal Reserve (FED) press releases and announcements. This application provides a user-friendly interface
+to run three distinct sentiment analysis algorithms on any FED announcement URL.
 
-## Fonctionnalités
+## Features
 
-- **Interface Web Intuitive** : Une interface utilisateur claire et simple, construite avec Flask et Bootstrap.
-- **Modèles d'Analyse Multiples** : Choisissez parmi trois indicateurs d'analyse de sentiment :
-    - **Indicateur v1** : Utilise NLTK VADER, un modèle basé sur un lexique robuste et optimisé pour le sentiment.
-    - **Indicateur v2** : Emploie TextBlob pour un calcul rapide de la polarité et de la subjectivité du texte entier.
-    - **Indicateur v3** : Une approche plus fine qui calcule le sentiment moyen de chaque phrase individuelle avec TextBlob.
-- **Résultats Détaillés** : Visualisez les scores de sentiment directement dans l'interface web.
-- **Déploiement Simple** : Fonctionne localement comme une application Flask standard.
+- **Intuitive Web Interface**: A clean and simple user interface built with Flask and Bootstrap.
+- **Multiple Analysis Models**: Choose from three sentiment analysis indicators:
+  - **Indicator v1**: Uses NLTK VADER, a robust lexicon-based model optimized for sentiment.
+  - **Indicator v2**: Employs TextBlob for quick polarity and subjectivity calculation of the entire text.
+  - **Indicator v3**: A more granular approach that calculates the average sentiment of each individual sentence with TextBlob.
+- **Detailed Results**: View sentiment scores directly in the web interface.
+- **Simple Deployment**: Runs locally as a standard Flask application.
 
 ## Installation
 
-Suivez ces étapes pour configurer et lancer le projet sur votre machine.
+Follow these steps to set up and run the project on your machine.
 
-### 1. Prérequis
+### 1. Prerequisites
 
 - Python 3.7+
-- Gestionnaire de paquets `pip`
+- `pip` package manager
 
-### 2. Cloner le Dépôt
+### 2. Clone the Repository
 
-Clonez ce dépôt sur votre machine locale :
+Clone this repository to your local machine:
 
 ```bash
-git clone <url_du_depot>
-cd <repertoire_du_projet>
-````
+git clone <repository_url>
+cd <project_directory>
+```
 
-### 3. Créer un Environnement Virtuel (Recommandé)
+### 3. Create a Virtual Environment (Recommended)
 
-Pour une gestion propre des dépendances, créez et activez un environnement virtuel.
+For clean dependency management, create and activate a virtual environment.
 
-- **macOS / Linux :**
+- **macOS / Linux:**
   ```bash
   python3 -m venv venv
   source venv/bin/activate
   ```
-- **Windows :**
+- **Windows:**
   ```bash
   python -m venv venv
   .\venv\Scripts\activate
   ```
 
-### 4. Installer les Dépendances
+### 4. Install Dependencies
 
-Installez les paquets Python requis à partir du fichier `requirements.txt`.
+Install the required Python packages from the `requirements.txt` file.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Lors du premier lancement, l'application téléchargera également automatiquement les données NLTK nécessaires (`vader_lexicon` et `punkt`).
+On first launch, the application will also automatically download the necessary NLTK data (`vader_lexicon` and `punkt`).
 
-## Utilisation
+## Usage
 
-### 1. Démarrer le Serveur Flask
+### 1. Start the Flask Server
 
-Exécutez le fichier `app.py` pour lancer le serveur web local.
+Run the `app.py` file to launch the local web server.
 
 ```bash
 python app.py
 ```
 
-Le terminal indiquera que le serveur est en cours d'exécution, généralement sur `http://127.0.0.1:5000`.
+The terminal will indicate that the server is running, typically at `http://127.0.0.1:5000`.
 
-### 2. Accéder à l'Interface Web
+### 2. Access the Web Interface
 
-Ouvrez votre navigateur web et accédez à l'adresse suivante :
-[**http://127.0.0.1:5000**](https://www.google.com/url?sa=E&source=gmail&q=http://127.0.0.1:5000)
+Open your web browser and go to:
+[**http://127.0.0.1:5000**](http://127.0.0.1:5000)
 
-### 3. Effectuer une Analyse
+### 3. Perform an Analysis
 
-1. **Choisir un Indicateur** : Sélectionnez l'onglet "Indicateur v1", "v2" ou "v3".
-2. **Saisir une URL** : Trouvez une URL de communiqué de presse sur le [site de la Réserve Fédérale]
-3. (https://www.federalreserve.gov/newsevents/pressreleases.htm) et collez-la dans le champ de saisie.
-    - *Exemple d'URL :* `https://www.federalreserve.gov/newsevents/pressreleases/monetary20230503a.htm`
-4. **Analyser** : Cliquez sur le bouton "Analyser le Sentiment".
-5. **Consulter les Résultats** : La page se rechargera pour afficher les résultats détaillés de l'analyse.
-
+1. **Choose an Indicator**: Select the "Indicator v1", "v2", or "v3" tab.
+2. **Enter a URL**: Find a press release URL from the [Federal Reserve website](https://www.federalreserve.gov/newsevents/pressreleases.htm) and paste it in the input
+   field.
+  - *Example URL:* `https://www.federalreserve.gov/newsevents/pressreleases/monetary20230503a.htm`
+3. **Analyze**: Click the "Analyze Sentiment" button.
+4. **Review Results**: The page will reload to display the detailed analysis results.

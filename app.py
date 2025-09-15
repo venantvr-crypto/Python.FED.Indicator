@@ -4,25 +4,25 @@ from flask import Flask, render_template, request
 
 from analyzers.textblob_document_analyzer import TextBlobDocumentAnalyzer
 from analyzers.textblob_sentence_analyzer import TextBlobSentenceAnalyzer
-# Importer les classes au lieu des modules
+# Import classes instead of modules
 from analyzers.vader_analyzer import VaderAnalyzer
 
 app = Flask(__name__)
 
 
 def download_nltk_data():
-    """Télécharge les données NLTK nécessaires au démarrage."""
+    """Download necessary NLTK data at startup."""
     try:
         nltk.data.find('sentiment/vader_lexicon.zip')
-        print("✅ Le lexique VADER est déjà téléchargé.")
+        print("✅ VADER lexicon is already downloaded.")
     except LookupError:
-        print("📥 Téléchargement du lexique VADER...")
+        print("📥 Downloading VADER lexicon...")
         nltk.download('vader_lexicon')
     try:
         nltk.data.find('tokenizers/punkt')
-        print("✅ Le tokenizer Punkt est déjà téléchargé.")
+        print("✅ Punkt tokenizer is already downloaded.")
     except LookupError:
-        print("📥 Téléchargement du tokenizer Punkt...")
+        print("📥 Downloading Punkt tokenizer...")
         nltk.download('punkt')
 
 
@@ -31,25 +31,25 @@ download_nltk_data()
 
 @app.route('/')
 def index():
-    """Affiche la page d'accueil."""
+    """Display the homepage."""
     return render_template('index.html')
 
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    """Gère la soumission du formulaire d'analyse."""
+    """Handle the analysis form submission."""
     url = request.form.get('url')
     indicator = request.form.get('indicator')
 
     if not url or not url.startswith('http'):
-        return render_template('index.html', error="Une URL valide est requise.", indicator=indicator, submitted_url=url)
+        return render_template('index.html', error="A valid URL is required.", indicator=indicator, submitted_url=url)
 
     result = None
     error = None
 
     try:
         analyzer = None
-        # Instancier la classe appropriée en fonction de l'indicateur
+        # Instantiate the appropriate class based on the indicator
         if indicator == 'v1':
             analyzer = VaderAnalyzer(url=url)
         elif indicator == 'v2':
@@ -57,16 +57,16 @@ def analyze():
         elif indicator == 'v3':
             analyzer = TextBlobSentenceAnalyzer(url=url)
         else:
-            error = "Indicateur de sentiment invalide."
+            error = "Invalid sentiment indicator."
 
         if analyzer:
-            # Appeler la méthode .analyze()
+            # Call the .analyze() method
             result = analyzer.analyze()
             if 'error' in result:
-                error = result.pop('error')  # Récupérer l'erreur et la retirer du résultat
+                error = result.pop('error')  # Retrieve the error and remove it from the result
 
     except Exception as e:
-        error = f"Une erreur inattendue est survenue : {e}"
+        error = f"An unexpected error occurred: {e}"
         result = None
 
     return render_template('index.html', result=result, error=error, indicator=indicator, submitted_url=url)
