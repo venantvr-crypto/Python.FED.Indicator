@@ -2,9 +2,7 @@
 import nltk
 from flask import Flask, render_template, request
 
-import indicator_v1 as v1
-import indicator_v2 as v2
-import indicator_v3 as v3
+from analyzers import textblob_document_analyzer as v2, vader_analyzer as v1, textblob_sentence_analyzer as v3
 
 app = Flask(__name__)
 
