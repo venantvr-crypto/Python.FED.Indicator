@@ -1,0 +1,19 @@
+[flake8]
+# --- Exclusions ---
+# Indiquer les dossiers et fichiers à ignorer durant l'analyse.
+# Le nom du dossier venv est maintenant corrigé.
+exclude =
+    .git,
+    __pycache__,
+    .idea,
+    .vscode,
+    .venv/
+
+# --- Règles de style ---
+# Longueur de ligne maximale (88 est un standard populaire, utilisé par l'outil "black")
+max-line-length = 128
+
+# --- Options d'affichage ---
+count = True
+show-source = True
+statistics = True

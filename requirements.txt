@@ -1,4 +1,6 @@
-nltk~=3.8.1
-requests~=2.28.2
-textblob~=0.17.1
-beautifulsoup4~=4.11.2
+# requirements.txt
+Flask
+nltk
+requests
+textblob
+beautifulsoup4

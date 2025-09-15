@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Analyse de Sentiment des Annonces de la FED</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 960px; }
+        .result-card { margin-top: 2rem; }
+        .footer { margin-top: 3rem; padding: 1.5rem 0; background-color: #e9ecef; text-align: center; color: #6c757d; }
+    </style>
+</head>
+<body>
+<header class="bg-primary text-white text-center py-5 mb-4">
+    <div class="container">
+        <h1 class="fw-light">Analyseur de Sentiment des Annonces de la FED</h1>
+        <p class="lead">Évaluez le ton des communiqués de presse de la Réserve Fédérale avec des modèles NLP.</p>
+    </div>
+</header>
+
+<div class="container">
+    <ul class="nav nav-tabs" id="indicatorTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if not indicator or indicator == 'v1' %}active{% endif %}" data-bs-target="#v1-content" data-bs-toggle="tab" id="v1-tab"
+                    type="button">Indicateur v1: NLTK VADER
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if indicator == 'v2' %}active{% endif %}" data-bs-target="#v2-content" data-bs-toggle="tab" id="v2-tab" type="button">Indicateur
+                v2: TextBlob
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if indicator == 'v3' %}active{% endif %}" data-bs-target="#v3-content" data-bs-toggle="tab" id="v3-tab" type="button">Indicateur
+                v3: TextBlob par Phrase
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="indicatorTabsContent">
+        <div class="tab-pane fade p-4 border border-top-0 rounded-bottom {% if not indicator or indicator == 'v1' %}show active{% endif %}" id="v1-content">
+            <h5>Analyse avec NLTK VADER</h5>
+            <p>Cet analyseur utilise le lexique VADER, optimisé pour les textes courts et les expressions de sentiments. Il retourne des scores de positivité, négativité
+                et neutralité.</p>
+            <form action="/analyze" method="POST">
+                <input name="indicator" type="hidden" value="v1">
+                <div class="mb-3"><label class="form-label" for="url_v1">URL du Communiqué de Presse</label><input class="form-control" id="url_v1" name="url"
+                                                                                                                   placeholder="https://www.federalreserve.gov/..."
+                                                                                                                   required
+                                                                                                                   type="url"
+                                                                                                                   value="{{ submitted_url if indicator == 'v1' else '' }}">
+                </div>
+                <button class="btn btn-primary" type="submit">Analyser le Sentiment</button>
+            </form>
+        </div>
+        <div class="tab-pane fade p-4 border border-top-0 rounded-bottom {% if indicator == 'v2' %}show active{% endif %}" id="v2-content">
+            <h5>Analyse avec TextBlob</h5>
+            <p>TextBlob évalue le sentiment de l'intégralité du texte, fournissant une polarité (de -1.0 à +1.0) et une subjectivité (de 0.0 à 1.0).</p>
+            <form action="/analyze" method="POST">
+                <input name="indicator" type="hidden" value="v2">
+                <div class="mb-3"><label class="form-label" for="url_v2">URL du Communiqué de Presse</label><input class="form-control" id="url_v2" name="url"
+                                                                                                                   placeholder="https://www.federalreserve.gov/..."
+                                                                                                                   required
+                                                                                                                   type="url"
+                                                                                                                   value="{{ submitted_url if indicator == 'v2' else '' }}">
+                </div>
+                <button class="btn btn-primary" type="submit">Analyser le Sentiment</button>
+            </form>
+        </div>
+        <div class="tab-pane fade p-4 border border-top-0 rounded-bottom {% if indicator == 'v3' %}show active{% endif %}" id="v3-content">
+            <h5>Analyse TextBlob par Phrase</h5>
+            <p>Cette méthode calcule la polarité de chaque phrase individuellement, puis en fait la moyenne. Cela permet d'obtenir un score plus nuancé.</p>
+            <form action="/analyze" method="POST">
+                <input name="indicator" type="hidden" value="v3">
+                <div class="mb-3"><label class="form-label" for="url_v3">URL du Communiqué de Presse</label><input class="form-control" id="url_v3" name="url"
+                                                                                                                   placeholder="https://www.federalreserve.gov/..."
+                                                                                                                   required
+                                                                                                                   type="url"
+                                                                                                                   value="{{ submitted_url if indicator == 'v3' else '' }}">
+                </div>
+                <button class="btn btn-primary" type="submit">Analyser le Sentiment</button>
+            </form>
+        </div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger mt-4"><strong>Erreur :</strong> {{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+    <div class="card result-card">
+        <div class="card-header fw-bold">Résultats de l'Analyse (Indicateur {{ indicator.upper() }})</div>
+        <div class="card-body">
+            <h5 class="card-title">Source : <a class="text-decoration-none" href="{{ submitted_url }}" rel="noopener noreferrer" target="_blank">{{ submitted_url }}</a>
+            </h5>
+            <ul class="list-group list-group-flush">
+                {% if indicator == 'v1' %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">Positif <span class="badge bg-success rounded-pill">{{ '%.2f'|format(result.pos * 100) }}%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Neutre <span class="badge bg-secondary rounded-pill">{{ '%.2f'|format(result.neu * 100) }}%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Négatif <span class="badge bg-danger rounded-pill">{{ '%.2f'|format(result.neg * 100) }}%</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">Score Composé <span class="badge bg-primary rounded-pill">{{ '%.4f'|format(result.compound) }}</span>
+                </li>
+                {% elif indicator == 'v2' %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">Sentiment Général <span
+                        class="badge {% if result.sentiment == 'Positif' %}bg-success{% elif result.sentiment == 'Négatif' %}bg-danger{% else %}bg-secondary{% endif %}">{{ result.sentiment }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Polarité <span class="badge bg-info rounded-pill">{{ '%.4f'|format(result.polarity) }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Subjectivité <span class="badge bg-warning text-dark rounded-pill">{{ '%.4f'|format(result.subjectivity) }}</span>
+                </li>
+                {% elif indicator == 'v3' %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">Sentiment Général <span
+                        class="badge {% if result.sentiment == 'Positif' %}bg-success{% elif result.sentiment == 'Négatif' %}bg-danger{% else %}bg-secondary{% endif %}">{{ result.sentiment }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Polarité Moyenne par Phrase <span class="badge bg-info rounded-pill">{{ '%.4f'|format(result.average_polarity) }}</span>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<footer class="footer">
+    <div class="container"><span>Outil Professionnel d'Analyse de Sentiment &copy; 2025</span></div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

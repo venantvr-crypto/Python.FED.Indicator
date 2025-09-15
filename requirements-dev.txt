@@ -1,0 +1,2 @@
+# Dépendances pour le développement (linting, formattage, etc.)
+flake8
