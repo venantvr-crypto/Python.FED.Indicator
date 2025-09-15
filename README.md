@@ -7,9 +7,9 @@ to run three distinct sentiment analysis algorithms on any FED announcement URL.
 
 - **Intuitive Web Interface**: A clean and simple user interface built with Flask and Bootstrap.
 - **Multiple Analysis Models**: Choose from three sentiment analysis indicators:
-  - **Indicator v1**: Uses NLTK VADER, a robust lexicon-based model optimized for sentiment.
-  - **Indicator v2**: Employs TextBlob for quick polarity and subjectivity calculation of the entire text.
-  - **Indicator v3**: A more granular approach that calculates the average sentiment of each individual sentence with TextBlob.
+    - **Indicator v1**: Uses NLTK VADER, a robust lexicon-based model optimized for sentiment.
+    - **Indicator v2**: Employs TextBlob for quick polarity and subjectivity calculation of the entire text.
+    - **Indicator v3**: A more granular approach that calculates the average sentiment of each individual sentence with TextBlob.
 - **Detailed Results**: View sentiment scores directly in the web interface.
 - **Simple Deployment**: Runs locally as a standard Flask application.
 
@@ -78,6 +78,8 @@ Open your web browser and go to:
 1. **Choose an Indicator**: Select the "Indicator v1", "v2", or "v3" tab.
 2. **Enter a URL**: Find a press release URL from the [Federal Reserve website](https://www.federalreserve.gov/newsevents/pressreleases.htm) and paste it in the input
    field.
-  - *Example URL:* `https://www.federalreserve.gov/newsevents/pressreleases/monetary20230503a.htm`
+
+- *Example URL:* `https://www.federalreserve.gov/newsevents/pressreleases/monetary20230503a.htm`
+
 3. **Analyze**: Click the "Analyze Sentiment" button.
 4. **Review Results**: The page will reload to display the detailed analysis results.
