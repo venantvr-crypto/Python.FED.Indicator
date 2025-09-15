@@ -2,16 +2,16 @@
 import nltk
 from flask import Flask, render_template, request
 
-from analyzers import textblob_document_analyzer as v2, vader_analyzer as v1, textblob_sentence_analyzer as v3
+from analyzers.textblob_document_analyzer import TextBlobDocumentAnalyzer
+from analyzers.textblob_sentence_analyzer import TextBlobSentenceAnalyzer
+# Importer les classes au lieu des modules
+from analyzers.vader_analyzer import VaderAnalyzer
 
 app = Flask(__name__)
 
 
 def download_nltk_data():
-    """
-    Télécharge les données NLTK nécessaires au démarrage.
-    Utilise LookupError qui est la méthode correcte pour les versions récentes de NLTK.
-    """
+    """Télécharge les données NLTK nécessaires au démarrage."""
     try:
         nltk.data.find('sentiment/vader_lexicon.zip')
         print("✅ Le lexique VADER est déjà téléchargé.")
@@ -26,7 +26,6 @@ def download_nltk_data():
         nltk.download('punkt')
 
 
-# Télécharger les données au lancement de l'application
 download_nltk_data()
 
 
@@ -49,21 +48,26 @@ def analyze():
     error = None
 
     try:
+        analyzer = None
+        # Instancier la classe appropriée en fonction de l'indicateur
         if indicator == 'v1':
-            result = v1.run_indicator_v1(url)
+            analyzer = VaderAnalyzer(url=url)
         elif indicator == 'v2':
-            result = v2.run_indicator_v2(url)
+            analyzer = TextBlobDocumentAnalyzer(url=url)
         elif indicator == 'v3':
-            result = v3.run_indicator_v3(url)
+            analyzer = TextBlobSentenceAnalyzer(url=url)
         else:
             error = "Indicateur de sentiment invalide."
 
-        if result and 'error' in result:
-            error = result['error']
-            result = None
+        if analyzer:
+            # Appeler la méthode .analyze()
+            result = analyzer.analyze()
+            if 'error' in result:
+                error = result.pop('error')  # Récupérer l'erreur et la retirer du résultat
 
     except Exception as e:
         error = f"Une erreur inattendue est survenue : {e}"
+        result = None
 
     return render_template('index.html', result=result, error=error, indicator=indicator, submitted_url=url)
 
