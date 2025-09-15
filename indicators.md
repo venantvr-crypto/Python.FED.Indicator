@@ -1,7 +1,6 @@
 # FED Announcement Sentiment Analysis Indicators
 
-This document combines three different approaches to analyze the sentiment of Federal Reserve (FED) announcements using Python and various Natural Language Processing (
-NLP) libraries.
+This document combines three different approaches to analyze the sentiment of Federal Reserve (FED) announcements using Python and various Natural Language Processing (NLP) libraries.
 
 ## Indicator v1: NLTK VADER Sentiment Analysis
 
