@@ -79,7 +79,7 @@ Open your web browser and go to:
 2. **Enter a URL**: Find a press release URL from the [Federal Reserve website](https://www.federalreserve.gov/newsevents/pressreleases.htm) and paste it in the input
    field.
 
-   - *Example URL:* `https://www.federalreserve.gov/newsevents/pressreleases/monetary20230503a.htm`
+    - *Example URL:* `https://www.federalreserve.gov/newsevents/pressreleases/monetary20230503a.htm`
 
 3. **Analyze**: Click the "Analyze Sentiment" button.
 4. **Review Results**: The page will reload to display the detailed analysis results.
